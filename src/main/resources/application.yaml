@@ -5,7 +5,7 @@ spring:
     config:
       discovery:
         enabled: true
-        service-id: SWIFTSHOPCONFIGSERVER  # Match the name from your Eureka screenshot!
+        service-id: SWIFTSHOPCONFIGSERVER  # This MUST match the name in your Eureka image
       fail-fast: true
   config:
     import: "optional:configserver:"

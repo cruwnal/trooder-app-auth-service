@@ -43,14 +43,13 @@ jobs:
             docker stop auth-service || true
             docker rm auth-service || true
             docker run -d \
-            --name auth-service \
-            --network trooder-network \
-            --memory="750m" \
-            -p 8081:8081 \
-            -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE='http://eureka-server:8761/eureka/' \
-            -e SPRING_CLOUD_CONFIG_DISCOVERY_ENABLED='true' \
-            -e SPRING_CLOUD_CONFIG_DISCOVERY_SERVICE_ID='SWIFTSHOPCONFIGSERVER' \
-            -e DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
-            -e JWT_SECRET_KEY='${{ secrets.JWT_SECRET_KEY }}' \
-            -e JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75.0" \
-            ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
+              --name auth-service \
+              --network trooder-network \
+              --memory="750m" \
+              -p 8081:8081 \
+              -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE='http://eureka-server:8761/eureka/' \
+              -e SPRING_CLOUD_CONFIG_DISCOVERY_ENABLED='true' \
+              -e DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
+              -e JWT_SECRET_KEY='${{ secrets.JWT_SECRET_KEY }}' \
+              -e JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75.0" \
+              ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest

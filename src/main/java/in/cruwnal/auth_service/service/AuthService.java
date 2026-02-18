@@ -17,51 +17,51 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService  implements IAuthService{
+public class AuthService implements IAuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+
     @Override
     public UserResponse registerUser(RegisterRequest request) {
         if (userRepository.findByEmail(request.email()).isPresent()) {
             throw new RuntimeException("Email already in use");
         }
 
-        String encodedPassword = passwordEncoder.encode(request.password());
         User user = User.builder()
                 .email(request.email())
-                .password(encodedPassword)
+                // Ensure your User entity has this field!
+                .fullName(request.fullName())
+                .password(passwordEncoder.encode(request.password()))
                 .roles(Set.of("ROLE_USER"))
                 .enabled(true)
                 .build();
 
         User savedUser = userRepository.save(user);
 
-
-        // Map Entity -> DTO (Keeps internal logic separate from the API)
         return new UserResponse(
                 savedUser.getId(),
                 savedUser.getEmail(),
-                request.fullName(), // From request
+                savedUser.getFullName(),
                 savedUser.getRoles()
         );
     }
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
+        // This triggers your CustomUserDetailsService and PasswordEncoder check
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
 
-        var user = userRepository.findByEmail(request.email())
-                .orElseThrow();
+        // Security Tip: Cast the principal to your User entity
+        // This works if your CustomUserDetailsService returns your User entity
+        User user = (User) authentication.getPrincipal();
 
         String accessToken = jwtService.generateToken(user.getEmail());
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());
-
-        // Optional: Save refreshToken to DB here if you want to support "Logout Everywhere"
 
         return new AuthResponse(
                 accessToken,

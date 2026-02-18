@@ -1,3 +1,11 @@
 spring:
   application:
     name: auth-service
+  cloud:
+    config:
+      # Replace with your VPS IP where the Config Server is running
+      uri: http://72.61.249.10:8888
+      fail-fast: true
+      retry:
+        initial-interval: 2000
+        max-attempts: 5

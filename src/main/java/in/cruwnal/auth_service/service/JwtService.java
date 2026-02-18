@@ -1,5 +1,6 @@
 package in.cruwnal.auth_service.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -52,5 +53,27 @@ public class JwtService {
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key) // Algorithm is inferred from the key type (HS256)
                 .compact();
+    }
+
+
+
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    public boolean isTokenValid(String token, String usernameFromUserDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(usernameFromUserDetails)) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractAllClaims(token).getExpiration().before(new Date());
+    }
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(key) // Use the same key we initialized in @PostConstruct
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

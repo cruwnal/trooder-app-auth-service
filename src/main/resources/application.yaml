@@ -3,9 +3,14 @@ spring:
     name: auth-service
   cloud:
     config:
-      # Replace with your VPS IP where the Config Server is running
-      uri: http://72.61.249.10:8888
+      discovery:
+        enabled: true
+        service-id: SWIFTSHOPCONFIGSERVER  # Match the name from your Eureka screenshot!
       fail-fast: true
-      retry:
-        initial-interval: 2000
-        max-attempts: 5
+  config:
+    import: "optional:configserver:"
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/

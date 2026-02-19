@@ -21,7 +21,7 @@ public class SecurityConfig {
     // 1. Define the BCrypt Bean
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(10);
     }
 
     // 2. Setup the Authentication Provider

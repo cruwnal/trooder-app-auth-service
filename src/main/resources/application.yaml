@@ -3,12 +3,9 @@ spring:
     name: auth-service
   cloud:
     config:
-      discovery:
-        enabled: true
-        service-id: SWIFTSHOPCONFIGSERVER  # This MUST match the name in your Eureka image
       fail-fast: true
   config:
-    import: "optional:configserver:"
+    import: "optional:configserver:http://72.61.249.10:8888/"
 
 eureka:
   client:

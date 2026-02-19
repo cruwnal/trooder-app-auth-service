@@ -47,9 +47,10 @@ jobs:
             --network trooder-network \
             --memory="750m" \
             -p 8081:8081 \
+            -e SPRING_CLOUD_CONFIG_ENABLED='true' \
+            -e SPRING_CLOUD_CONFIG_DISCOVERY_ENABLED='false' \
+            -e SPRING_CONFIG_IMPORT='configserver:http://72.61.249.10:8888/' \
             -e EUREKA_CLIENT_SERVICEURL_DEFAULTZONE='http://72.61.249.10:8761/eureka/' \
-            -e SPRING_CLOUD_CONFIG_URI='http://72.61.249.10:8888' \
-            -e SPRING_CONFIG_IMPORT='optional:configserver:http://72.61.249.10:8888/' \
             -e DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
             -e JWT_SECRET_KEY='${{ secrets.JWT_SECRET_KEY }}' \
             -e JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75.0" \
